@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#5d5c62"
+    android:orientation="vertical" >
+
+    <!-- divider行与行之间的分割线,listSelector选中颜色，groupIndicator前面的箭头 -->
+
+    <ExpandableListView
+        android:id="@+id/weather_expandablelistview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null"
+        android:groupIndicator="@null"
+        android:listSelector="#5d5c62" >
+    </ExpandableListView>
+
+</LinearLayout>
