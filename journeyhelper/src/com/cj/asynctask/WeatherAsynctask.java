@@ -10,6 +10,7 @@ import com.cj.IInterFace.WeatherInterface;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.view.animation.Animation;
 
 public class WeatherAsynctask extends AsyncTask<Object, Object, Object> {
 
@@ -17,11 +18,13 @@ public class WeatherAsynctask extends AsyncTask<Object, Object, Object> {
 	private static String APIKey = "59ef8e748dbb4a5cb0f1af7c6f43f2ae";
 	private ProgressDialog dialog;
 	private WeatherInterface weatherInterface;
+	private Animation manimation;
 
 	public WeatherAsynctask(ProgressDialog progressDialog,
-			WeatherInterface weatherInterface) {
+			WeatherInterface weatherInterface, Animation animation) {
 		this.dialog = progressDialog;
 		this.weatherInterface = weatherInterface;
+		this.manimation = animation;
 	}
 
 	@Override
@@ -71,8 +74,12 @@ public class WeatherAsynctask extends AsyncTask<Object, Object, Object> {
 	protected void onPostExecute(Object result) {
 		// TODO 自动生成的方法存根
 		super.onPostExecute(result);
-		dialog.dismiss();
-		weatherInterface.GetWeatherInfo(result.toString());
+		if (manimation == null) {
+		} else {
+			manimation.cancel();
+		}
+			dialog.dismiss();
+			weatherInterface.GetWeatherInfo(result.toString());
 	}
 
 }

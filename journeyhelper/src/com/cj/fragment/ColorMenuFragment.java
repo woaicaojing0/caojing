@@ -4,10 +4,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.cj.adapter.WeatherMenuAdapter;
+import com.cj.dao.WeatherCityDao;
 import com.cj.journeyhelper.R;
 import com.cj.journeyhelper.WeatherActivity2;
+import com.cj.journeyhelper.WeatherCityActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
@@ -24,12 +27,14 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ColorMenuFragment extends Fragment {
+public class ColorMenuFragment extends Fragment implements com.cj.journeyhelper.WeatherCityActivity.RefreshCity {
 
 	private ListView list_city;
 	private TextView txt_edit;
 	private ImageButton txt_add_city;
 	private Context context;
+	private List<String> list;
+	private WeatherMenuAdapter adapter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -50,15 +55,23 @@ public class ColorMenuFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				// TODO 自动生成的方法存根
-				Toast.makeText(context, "由于开发者懒，暂时还没开发这个功能", 1).show();
+				WeatherCityActivity.getcity(ColorMenuFragment.this);
+				Intent intent = new Intent(context, WeatherCityActivity.class);
+
+
+				startActivity(intent);
+				// Toast.makeText(context, "由于开发者懒，暂时还没开发这个功能", 1).show();
 			}
 		});
-		String[] citys = { "南京", "苏州", "无锡", "上海", "泰州", "徐州","哈尔滨" };
-		final List<String> list = Arrays.asList(citys);
-		WeatherMenuAdapter adapter = new WeatherMenuAdapter(list, context);
+		WeatherCityDao cityDao = new WeatherCityDao(context);
+		list = cityDao.getSelectedCityName();
+		// String[] citys;
+		// citys =(String[]) city.toArray();
+		// String[] citys = { "南京", "苏州", "无锡", "上海", "泰州", "徐州", "哈尔滨" };
+		// final List<String> list = Arrays.asList(citys);
+		adapter = new WeatherMenuAdapter(list, context);
 		list_city.setAdapter(adapter);
-		adapter.notifyDataSetChanged();
+
 		list_city.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -66,9 +79,9 @@ public class ColorMenuFragment extends Fragment {
 					int position, long id) {
 				// TODO 自动生成的方法存根
 				Fragment newContent = null;
-				newContent = new ColorFragment(list.get(position), context,null);
-				if(newContent!=null)
-				{
+				newContent = new ColorFragment(list.get(position), context,
+						null, null);
+				if (newContent != null) {
 					switchFragment(newContent);
 				}
 			}
@@ -80,33 +93,8 @@ public class ColorMenuFragment extends Fragment {
 		this.context = context;
 	}
 
-	//
-	// @Override
-	// public void onListItemClick(ListView lv, View v, int position, long id) {
-	// Fragment newContent = null;
-	// switch (position) {
-	// case 0:
-	// newContent = new ColorFragment(R.color.red, context);
-	// break;
-	// case 1:
-	// newContent = new ColorFragment(R.color.green, context);
-	// break;
-	// case 2:
-	// newContent = new ColorFragment(R.color.blue, context);
-	// break;
-	// case 3:
-	// newContent = new ColorFragment(android.R.color.white, context);
-	// break;
-	// case 4:
-	// newContent = new ColorFragment(android.R.color.black, context);
-	// break;
-	// }
-	// if (newContent != null)
-	// switchFragment(newContent);
-	// }
-
 	// 切换Fragment视图内ring
-	private void switchFragment(Fragment fragment) {
+	public void switchFragment(Fragment fragment) {
 		if (getActivity() == null)
 			return;
 
@@ -114,6 +102,16 @@ public class ColorMenuFragment extends Fragment {
 			WeatherActivity2 fca = (WeatherActivity2) getActivity();
 			fca.switchContent(fragment);
 		}
+	}
+
+	@Override
+	public void refresh() {
+		WeatherCityDao cityDao = new WeatherCityDao(context);
+		list = cityDao.getSelectedCityName();
+		adapter = new WeatherMenuAdapter(list, context);
+		list_city.setAdapter(adapter);
+		adapter.notifyDataSetChanged();
+
 	}
 
 }

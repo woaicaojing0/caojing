@@ -85,7 +85,8 @@
         </activity>
         <activity
             android:name="com.cj.journeyhelper.WeatherActivity2"
-            android:theme="@style/titlebarstyle" >
+            android:theme="@style/titlebarstyle"
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.cj.journeyhelper.test"
@@ -94,6 +95,8 @@
         <activity android:name="com.cj.journeyhelper.KnowActivity" >
         </activity>
         <activity android:name="com.cj.journeyhelper.KnowDetailActivity" >
+        </activity>
+        <activity android:name="com.cj.journeyhelper.WeatherCityActivity" >
         </activity>
     </application>
 

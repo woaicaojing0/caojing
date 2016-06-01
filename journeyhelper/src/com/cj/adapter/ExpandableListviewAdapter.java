@@ -15,7 +15,7 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import com.cj.Utils.WeatherImage;
 import com.cj.Utils.CommonUtils;
 import com.cj.journeyhelper.R;
 import com.cj.weathbean.WeatherBean;
@@ -101,22 +101,27 @@ public class ExpandableListviewAdapter extends BaseExpandableListAdapter {
 			TextView txt_weather_1today = (TextView) convertView
 					.findViewById(R.id.txt_weather_1today);
 			ImageView img_weather_1 = (ImageView) convertView
-					.findViewById(R.id.img_weather_1);
-			txt_weather_1tmp.setText(bean.getDaily_forecast()
-					.get(groupPosition).getTmp().getMin()
-					+ "℃ ～ "
-					+ bean.getDaily_forecast().get(groupPosition).getTmp()
-							.getMax() + "℃");
+					.findViewById(R.id.img_weather_top1);
+			TextView txt_updattimeTextView = (TextView) convertView
+					.findViewById(R.id.text_updatetime);
+
 			try {
 				txt_weather_1today.setText(CommonUtils.dayForWeek(bean
 						.getDaily_forecast().get(0).getDate()));
+				txt_weather_1tmp.setText(bean.getDaily_forecast()
+						.get(groupPosition).getTmp().getMin()
+						+ "℃ ～ "
+						+ bean.getDaily_forecast().get(groupPosition).getTmp()
+								.getMax() + "℃");
+				String timeString = bean.getBasic().getUpdate().getLoc();
+				txt_updattimeTextView.setText("更新于:"+timeString.substring(10, timeString.length()));
 			} catch (Exception e) {
 				// TODO 自动生成的 catch 块
 				e.printStackTrace();
 			}
-			txt_weather_city.setText("南京");
-			switchweather(img_weather_1,0);
-//			img_weather_1.setImageResource(R.drawable.sun);
+			txt_weather_city.setText(bean.getBasic().getCity().toString());
+			switchweather(img_weather_1, 0);
+			// img_weather_1.setImageResource(R.drawable.sun);
 		} else {
 			convertView = null;
 			ViewHolder holder = null;
@@ -165,7 +170,7 @@ public class ExpandableListviewAdapter extends BaseExpandableListAdapter {
 				break;
 			}
 			switchweather(holder.imageView, groupPosition);
-//			holder.imageView.setImageResource(R.drawable.snowy);
+			// holder.imageView.setImageResource(R.drawable.snowy);
 			holder.txt_weather_tmp.setText(bean.getDaily_forecast()
 					.get(groupPosition).getTmp().getMin()
 					+ "℃ ～ "
@@ -182,26 +187,11 @@ public class ExpandableListviewAdapter extends BaseExpandableListAdapter {
 		return convertView;
 	}
 
-	public void switchweather(ImageView imageView,int groupPosition) {
+	public void switchweather(ImageView imageView, int groupPosition) {
 		// 判断天气情况
-		switch (Integer.valueOf(bean.getDaily_forecast().get(groupPosition)
-				.getCond().getCode_d())) {
-		case 104:// 阴
-			imageView.setImageResource(R.drawable.cloudy);
-			break;
-		case 100:// 晴
-			imageView.setImageResource(R.drawable.sun);
-			break;
-		case 101:// 多云
-			imageView.setImageResource(R.drawable.cloud);
-			break;
-		case 305:// 小雨
-			imageView.setImageResource(R.drawable.rain);
-			break;
-
-		default:
-			break;
-		}
+		imageView.setImageResource(WeatherImage.WeatherImageByCond_d(Integer
+				.valueOf(bean.getDaily_forecast().get(groupPosition).getCond()
+						.getCode_d())));
 	}
 
 	class ViewHolder {
@@ -221,16 +211,60 @@ public class ExpandableListviewAdapter extends BaseExpandableListAdapter {
 					R.layout.weather_layout_child_item, null);
 			holder2.textView = (TextView) convertView
 					.findViewById(R.id.txt_weather_layout_child);
+			holder2.sunrise_time = (TextView) convertView
+					.findViewById(R.id.sunrise_time);
+			holder2.sunset_time = (TextView) convertView
+					.findViewById(R.id.sunset_time);
+			holder2.text_shuoming = (TextView) convertView
+					.findViewById(R.id.text_shuoming);
 			convertView.setTag(holder2);
 		} else {
 			holder2 = (ViewHolder2) convertView.getTag();
 		}
-		holder2.textView.setText(bean.getSuggestion().getComf().getTxt());
+		if (groupPosition == 0) {
+			holder2.textView.setText(bean.getSuggestion().getComf().getTxt());
+		} else {
+			holder2.textView.setText("");
+		}
+		holder2.sunrise_time.setText(bean.getDaily_forecast()
+				.get(groupPosition).getAstro().getSr());
+		holder2.sunset_time.setText(bean.getDaily_forecast().get(groupPosition)
+				.getAstro().getSs());
+		String textshuomingString = null;
+		String text_d = bean.getDaily_forecast().get(groupPosition).getCond()
+				.getTxt_d();
+		String text_n = bean.getDaily_forecast().get(groupPosition).getCond()
+				.getTxt_n();
+		String fengji = bean.getDaily_forecast().get(groupPosition).getWind()
+				.getDir();
+		String fengname = bean.getDaily_forecast().get(0).getWind().getSc();
+		if (text_d.equals(text_n)) {
+			textshuomingString = ("白天到夜里，天气："
+					+ text_d
+					+ "；最高温度"
+					+ bean.getDaily_forecast().get(groupPosition).getTmp()
+							.getMax()
+					+ "℃，最低温度"
+					+ bean.getDaily_forecast().get(groupPosition).getTmp()
+							.getMin() + "℃；" + fengname + "   " + fengji);
+		} else {
+			textshuomingString = ("白天到夜里，天气："
+					+ text_d
+					+ "转"
+					+ text_n
+					+ "； 最高温度"
+					+ bean.getDaily_forecast().get(groupPosition).getTmp()
+							.getMax()
+					+ "℃，最低温度"
+					+ bean.getDaily_forecast().get(groupPosition).getTmp()
+							.getMin() + "℃；" + fengname + "   " + fengji);
+		}
+		holder2.text_shuoming.setText(textshuomingString);
 		return convertView;
 	}
 
 	class ViewHolder2 {
-		TextView textView;
+		TextView textView, sunrise_time, sunset_time, text_shuoming;
 	}
 
 	@Override

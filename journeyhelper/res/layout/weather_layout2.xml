@@ -15,5 +15,9 @@
         android:groupIndicator="@null"
         android:listSelector="#5d5c62" >
     </ExpandableListView>
-
+<Button 
+    android:id="@+id/hidden"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    />
 </LinearLayout>

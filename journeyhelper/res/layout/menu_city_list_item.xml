@@ -1,18 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="horizontal" >
 
     <TextView
         android:id="@+id/menu_city_list_item_txt"
         android:layout_width="wrap_content"
-        android:layout_height="40dp" 
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="14dp"
         android:layout_marginTop="10dp"
         android:text="城市"
-        android:textSize="20sp"
         android:textColor="@color/black"
-        
-        android:layout_marginLeft="14dp"/>
+        android:textSize="20sp" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/menu_city_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="删除"
+        android:textColor="@color/black"
+        android:textSize="20sp" />
+
+</RelativeLayout>

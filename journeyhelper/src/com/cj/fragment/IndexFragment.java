@@ -1,9 +1,5 @@
 package com.cj.fragment;
 
-import com.cj.journeyhelper.R;
-import com.cj.journeyhelper.WeatherActivity;
-import com.cj.journeyhelper.WeatherActivity2;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,10 +7,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.webkit.WebView.FindListener;
+import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.cj.journeyhelper.R;
+import com.cj.journeyhelper.WeatherActivity2;
 
 public class IndexFragment extends Fragment implements OnClickListener {
 	private Context mcontext;

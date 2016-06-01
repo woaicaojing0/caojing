@@ -1,6 +1,7 @@
 package com.cj.journeyhelper;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -9,18 +10,18 @@ import android.view.Window;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
-import android.widget.ExpandableListView;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.apistore.sdk.asa.c;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
 import com.cj.fragment.ColorMenuFragment;
-import com.cj.weathbean.WeatherBean;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
@@ -33,15 +34,24 @@ public class WeatherActivity2 extends SlidingFragmentActivity {
 	public static String locationcity = "南京";
 	private BDLocationListener myListener = new MyLocationListener();
 	private TextView textView;
+	private RefreshWeather mrefreshWeather;
+
+	public void OnRefreshListener(RefreshWeather refreshWeather) {
+		this.mrefreshWeather = refreshWeather;
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		// TODO 自动生成的方法存根
 		super.onCreate(savedInstanceState);
 		// bundle = savedInstanceState;
 		// 设置主视图界面
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
 		initSlidingMenu(savedInstanceState);
+		Intent intent = getIntent();
+		locationcity = intent.getStringExtra("location");
+		if (locationcity == null || locationcity == "") {
+			locationcity = "南京";
+		}
 		dialog = new ProgressDialog(WeatherActivity2.this);
 		dialog.setTitle("提示信息");
 		dialog.setMessage("正在定位，请稍等......");
@@ -75,6 +85,10 @@ public class WeatherActivity2 extends SlidingFragmentActivity {
 				// TODO 自动生成的方法存根
 				Toast.makeText(WeatherActivity2.this, "124441", 1).show();
 				button_refresh.startAnimation(animation);
+				mContent = new com.cj.fragment.ColorFragment(locationcity,
+						WeatherActivity2.this, textView, animation);
+				getSupportFragmentManager().beginTransaction()
+						.replace(R.id.content_frame, mContent).commit();
 			}
 		});
 		// mMenu = (SlidingMenu) findViewById(R.id.id_menu);
@@ -139,7 +153,7 @@ public class WeatherActivity2 extends SlidingFragmentActivity {
 			}
 			// 重新覆盖fragment中的
 			mContent = new com.cj.fragment.ColorFragment(locationcity,
-					WeatherActivity2.this, textView);
+					WeatherActivity2.this, textView, null);
 			getSupportFragmentManager().beginTransaction()
 					.replace(R.id.content_frame, mContent).commit();
 			// dialog.dismiss();
@@ -161,6 +175,24 @@ public class WeatherActivity2 extends SlidingFragmentActivity {
 		option.SetIgnoreCacheException(false);// 可选，默认false，设置是否收集CRASH信息，默认收集
 		option.setEnableSimulateGps(false);// 可选，默认false，设置是否需要过滤gps仿真结果，默认需要
 		mLocationClient.setLocOption(option);
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		getSlidingMenu().showContent();
+		locationcity = intent.getStringExtra("location");
+		if (locationcity == null || locationcity == "") {
+		}else {
+			mContent = new com.cj.fragment.ColorFragment(locationcity,
+					WeatherActivity2.this, textView, null);
+			getSupportFragmentManager().beginTransaction()
+					.replace(R.id.content_frame, mContent)
+					.commitAllowingStateLoss();
+		}
+	}
+
+	public interface RefreshWeather {
+		public void Onclick(ImageButton button);
 	}
 
 }

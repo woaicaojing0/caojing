@@ -32,13 +32,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
+                android:layout_alignParentBottom="true"
                 android:text="南京"
                 android:textColor="#FFFFFF"
                 android:textSize="24sp" />
 
             <ImageView
-                android:id="@+id/img_weather_1"
+                android:id="@+id/img_weather_top1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/weather_city"
@@ -54,6 +54,19 @@
                 android:text="星期一"
                 android:textColor="#FFFFFF"
                 android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/text_updatetime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/img_weather_top1"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:text="南京"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp" />
+
         </RelativeLayout>
     </LinearLayout>
-    </LinearLayout>
+
+</LinearLayout>

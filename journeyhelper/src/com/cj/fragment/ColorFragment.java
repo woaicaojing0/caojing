@@ -6,35 +6,30 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
-import com.baidu.location.LocationClientOption.LocationMode;
-import com.cj.IInterFace.WeatherInterface;
-import com.cj.adapter.ExpandableListviewAdapter;
-import com.cj.asynctask.WeatherAsynctask;
-import com.cj.journeyhelper.R;
-import com.cj.journeyhelper.WeatherActivity2;
-import com.cj.weathbean.WeatherBean;
-import com.google.gson.Gson;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.ExpandableListView;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ColorFragment extends Fragment implements WeatherInterface {
+import com.cj.IInterFace.WeatherInterface;
+import com.cj.adapter.ExpandableListviewAdapter;
+import com.cj.asynctask.WeatherAsynctask;
+import com.cj.journeyhelper.R;
+import com.cj.journeyhelper.WeatherActivity2.RefreshWeather;
+import com.cj.weathbean.WeatherBean;
+import com.google.gson.Gson;
 
+public class ColorFragment extends Fragment implements WeatherInterface {
+  
+	private Animation manimation;
 	private int mColorRes = -1;
 	private String address;
 	private Context context;
@@ -43,9 +38,10 @@ public class ColorFragment extends Fragment implements WeatherInterface {
 	private ExpandableListView expandableListView;//2个listview组成的控件
 	private static TextView textView;// titlebar中显示的城市名称，第一次进时，由weatheractivity传入，以后不需要传入textview。
 
-	public ColorFragment(String address, Context context, TextView textView) {
+	public ColorFragment(String address, Context context, TextView textView,Animation animation) {
 		this.address = address;
 		this.context = context;
+		this.manimation = animation;
 		if (textView == null) {
 		} else {
 			ColorFragment.textView = textView;
@@ -67,8 +63,8 @@ public class ColorFragment extends Fragment implements WeatherInterface {
 		dialog.setMessage("正在加载天气，请稍等......");
 		dialog.setCancelable(false);
 		dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-		textView.setText(address + "市");
-		WeatherAsynctask asynctask = new WeatherAsynctask(dialog, this);
+		textView.setText(address);
+		WeatherAsynctask asynctask = new WeatherAsynctask(dialog, this, manimation);
 		int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 		if (currentapiVersion >= 20) {// 表示安卓版本是5.0以上的
 			asynctask.execute(new String(address));
@@ -81,16 +77,6 @@ public class ColorFragment extends Fragment implements WeatherInterface {
 				e.printStackTrace();
 			}
 		}
-		// ImageButton button= (ImageButton)
-		// view.findViewById(R.id.titlebar_imgbutton);
-		// button.setOnClickListener(new OnClickListener() {
-		//
-		// @Override
-		// public void onClick(View v) {
-		// // TODO 自动生成的方法存根
-		// Toast.makeText(context, "124441", 1).show();
-		// }
-		// });
 		return view;
 	}
 
